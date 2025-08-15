@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+ binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  homePage String? @map("home_page")
+
+  comments Comment[]
+  createdAt DateTime @default(now()) @map("created_at")
+  @@index([ email])
+  @@map("user")
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  text String
+
+  parentId Int? @map("parent_id")
+  parent Comment? @relation("Child", fields: [parentId], references: [id], onDelete: Cascade)
+  child Comment[] @relation("Child")
+
+  userId Int? @map("user_id")
+  user User? @relation(fields: [userId], references: [id])
+
+  userName String? @map("user_name")
+  email String? 
+  homePage String? @map("home_page")
+  file CommentFile?
+  
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([email])
+  @@map("comment")
+}
+
+model CommentFile {
+  id Int @id @default(autoincrement())
+  commentId Int @unique @map("comment_id")
+  comment Comment @relation(fields: [commentId], references: [id])
+  filePath String @map("file_path")
+  fileType String @map("file_type")
+  originalName String? @map("original_name")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([commentId])
+  @@map("comment_file")
+}
