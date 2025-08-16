@@ -17,7 +17,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   server:
-    build: ./server
+    image: evgeniygorban/task-gorban-nest:latest
     container_name: nest-server
     ports:
       - "4000:4000"
@@ -35,9 +35,7 @@ services:
       - redis
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: evgeniygorban/task-gorban-react:latest
     container_name: react-client
     ports:
       - "80:3000"
@@ -48,3 +46,53 @@ services:
 
 volumes:
   pgdata:
+# version: "3.9"
+
+# services:
+#   redis:
+#     image: redis:7
+#     container_name: redis
+#     command: redis-server --requirepass ${REDIS_PASSWORD}
+
+#   postgres:
+#     image: postgres:15
+#     container_name: postgres
+#     environment:
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#       POSTGRES_DB: ${POSTGRES_DB}
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+#   server:
+#     build: ./server
+#     container_name: nest-server
+#     ports:
+#       - "4000:4000"
+#     environment:
+#       NODE_ENV: ${NODE_ENV}
+#       PORT: ${PORT}
+#       DATABASE_URL: ${DATABASE_URL}
+#       JWT_SECRET: ${JWT_SECRET}
+#       REDIS_HOST: ${REDIS_HOST}
+#       REDIS_PORT: ${REDIS_PORT}
+#       REDIS_PASSWORD: ${REDIS_PASSWORD}
+#       CLIENT_URL: ${CLIENT_URL}
+#     depends_on:
+#       - postgres
+#       - redis
+
+#   client:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     container_name: react-client
+#     ports:
+#       - "80:3000"
+#     environment:
+#       REACT_APP_SERVER_URL: ${REACT_APP_SERVER_URL}
+#     depends_on:
+#       - server
+
+# volumes:
+#   pgdata:
